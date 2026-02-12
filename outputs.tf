@@ -17,3 +17,11 @@ output "active_assignments" {
     k => v.id
   }
 }
+
+output "eligible_assignments" {
+  description = "Map of eligible role assignment IDs."
+  value = {
+    for k, v in azuread_directory_role_eligibility_schedule_request.eligible :
+    k => v.id
+  }
+}

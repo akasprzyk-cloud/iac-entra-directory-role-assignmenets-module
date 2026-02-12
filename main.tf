@@ -28,16 +28,18 @@ resource "azuread_directory_role_assignment" "active" {
     k => v if v.pim_enabled == "false"
   }
 
-  role_id             = azuread_directory_role.roles[each.key].id
+  role_id             = azuread_directory_role.roles[each.key].object_id
   principal_object_id = azuread_group.groups[each.key].object_id
 }
 
-resource "azuread_directory_role_assignment" "eligible" {
+resource "azuread_directory_role_eligibility_schedule_request" "eligible" {
   for_each = {
     for k, v in local.role_assignments_map :
     k => v if v.pim_enabled == "true"
   }
 
-  role_id             = azuread_directory_role.roles[each.key].id
-  principal_object_id = azuread_group.groups[each.key].object_id
+  role_definition_id = azuread_directory_role.roles[each.key].template_id
+  principal_id       = azuread_group.groups[each.key].object_id
+  directory_scope_id = "/"
+  justification      = "PIM role assignment from Terraform"
 }
