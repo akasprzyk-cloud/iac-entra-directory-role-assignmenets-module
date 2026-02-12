@@ -1,6 +1,6 @@
 # Entra directory role assignments (module)
 
-This module creates directory role assignments from a CSV file. Assignments can be either **active** (permanent) or **eligible** (PIM) based on the `pim_enabled` column.
+This module creates Entra ID groups and assigns directory roles from a CSV file. Assignments can be either **active** (permanent) or **eligible** (PIM) based on the `pim_enabled` column. Groups are created with `assignable_to_role = true`.
 
 ## Inputs
 - `directory_roles_csv_path` (string, required) – path to CSV with role assignments

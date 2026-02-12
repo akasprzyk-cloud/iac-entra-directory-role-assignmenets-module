@@ -9,9 +9,12 @@ terraform {
   }
 }
 
-data "azuread_group" "groups" {
-  for_each     = local.role_assignments_map
-  display_name = each.value.group_name
+resource "azuread_group" "groups" {
+  for_each = local.role_assignments_map
+
+  display_name       = each.value.group_name
+  security_enabled   = true
+  assignable_to_role = true
 }
 
 resource "azuread_directory_role" "roles" {
@@ -26,7 +29,7 @@ resource "azuread_directory_role_assignment" "active" {
   }
 
   role_id             = azuread_directory_role.roles[each.key].id
-  principal_object_id = data.azuread_group.groups[each.key].id
+  principal_object_id = azuread_group.groups[each.key].object_id
 }
 
 resource "azuread_directory_role_assignment" "eligible" {
@@ -36,5 +39,5 @@ resource "azuread_directory_role_assignment" "eligible" {
   }
 
   role_id             = azuread_directory_role.roles[each.key].id
-  principal_object_id = data.azuread_group.groups[each.key].id
+  principal_object_id = azuread_group.groups[each.key].object_id
 }
