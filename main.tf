@@ -13,8 +13,10 @@ resource "azuread_group" "groups" {
   for_each = local.role_assignments_map
 
   display_name       = each.value.group_name
-  security_enabled   = true
-  assignable_to_role = true
+  prevent_duplicate_names = true
+  mail_enabled            = false
+  security_enabled        = true
+  assignable_to_role      = true
 }
 
 resource "azuread_directory_role" "roles" {
